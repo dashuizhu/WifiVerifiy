@@ -11,7 +11,7 @@ public class AppConstants {
   /**
    * 端口
    */
-  public final static int SERVER_PORT = 60613;
+  public final static int SERVER_PORT = 56677;
 
   public static final String RXBUS_PUSH = "rx_push";
   public static final String RXBUS_STATE = "rx_state";

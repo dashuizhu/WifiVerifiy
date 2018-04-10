@@ -5,11 +5,11 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import com.hwangjr.rxbus.RxBus;
-import com.verifywifi.agreement.CmdParse;
+import com.verifywifi.agreement.Encrypt;
 import com.verifywifi.bean.StateBean;
 import com.verifywifi.utils.AppUtils;
+import com.verifywifi.utils.MyLog;
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
@@ -41,7 +41,7 @@ public class WifiServerService extends Service {
   /**
    * TCP客户端，读取数据连续4次无数据，断开客户端的连接，相当于9秒无数据，就T掉客户端
    */
-  private final static int READ_COUNT = 4;
+  private final static int READ_COUNT = 400;
 
   /**
    * 最大连接数
@@ -75,6 +75,8 @@ public class WifiServerService extends Service {
    */
   Disposable disposable;
 
+  private Encrypt mEncrypt = new Encrypt();
+
   @Nullable
   @Override
   public IBinder onBind(Intent intent) {
@@ -97,6 +99,9 @@ public class WifiServerService extends Service {
     }
   }
 
+  /**
+   * 开始服务器
+   */
   private void startServer() {
     try {
       // 1、创建ServerSocket服务器套接字
@@ -107,7 +112,7 @@ public class WifiServerService extends Service {
       }
       mWorkState = StateBean.WAIT;
       sendState();
-      Log.w(TAG, "start work accept socket."
+      MyLog.w(TAG, "start work accept socket."
               + AppUtils.getLocalIpAddress(this)
               + ":"
               + AppConstants.SERVER_PORT);
@@ -129,7 +134,7 @@ public class WifiServerService extends Service {
     } catch (Exception e) {
       e.printStackTrace();
       try {
-        Log.e(TAG, " 服务端重启 ");
+        MyLog.e(TAG, " 服务端重启 ");
         mServerSocket.close();
       } catch (IOException eio) {
         eio.printStackTrace();
@@ -157,7 +162,7 @@ public class WifiServerService extends Service {
     }
     mClientAddress = socket.getRemoteSocketAddress().toString();
     mSocketList.add(socket);
-    Log.w(TAG, "connent success:  " + mClientAddress);
+    MyLog.w(TAG, "connent success:  " + mClientAddress);
     disposable = Observable.just(socket).subscribe(new Consumer<Socket>() {
       @Override
       public void accept(Socket client) throws Exception {
@@ -177,7 +182,7 @@ public class WifiServerService extends Service {
             if (length != -1) {
               //读取到数据 清零
               count = 0;
-              CmdParse.parse(buf, length);
+              mEncrypt.processDataCommand(buf, length);
             }
           } catch (SocketTimeoutException e) {
           }
@@ -186,7 +191,7 @@ public class WifiServerService extends Service {
           count++;
           if (count > READ_COUNT) {
             client.close();
-            Log.w(TAG, " 未读取到数据 踢下线");
+            MyLog.w(TAG, " 未读取到数据 踢下线");
           }
         }
         mWorkState = StateBean.WAIT;
@@ -194,7 +199,7 @@ public class WifiServerService extends Service {
         if (client != null) {
           mSocketList.remove(client);
         }
-        Log.w(TAG, "client disConnect " + mClientAddress);
+        MyLog.w(TAG, "client disConnect " + mClientAddress);
         if (disposable != null && !disposable.isDisposed()) {
           disposable.dispose();
         }
@@ -210,7 +215,7 @@ public class WifiServerService extends Service {
             socket.close();
           }
         }
-        Log.w(TAG, "client disConnect " + mClientAddress);
+        MyLog.w(TAG, "client disConnect " + mClientAddress);
         if (disposable != null && !disposable.isDisposed()) {
           disposable.dispose();
         }

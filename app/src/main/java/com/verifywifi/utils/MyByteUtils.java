@@ -3,7 +3,7 @@ package com.verifywifi.utils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyByte {
+public class MyByteUtils {
   public static String[] byte2String;
 
   //buffer[] 2 String
@@ -29,11 +29,11 @@ public class MyByte {
   }
 
   private static String trim(String str) {
-    if (str.length() == 8) {
+    if (str.length() == 8) {// 去掉补位的f
       str = str.substring(6);
     }
     if (str.length() == 1) {
-      str = "0" + str;// ??0
+      str = "0" + str;// 补0
     }
     return str;
   }
@@ -114,7 +114,7 @@ public class MyByte {
     return d;
   }
 
-  //0???? 7????λ
+  //0为最顶为 7为最高位
   public static int getOne(int data, int index) {
     List<Integer> list = getList(data);
     return list.get(index);
@@ -149,5 +149,20 @@ public class MyByte {
     }
 
     return buffer2String(buffer);
+  }
+
+  /**
+   * 10进制 直接转换, '123'  = 0x01 0x02 0x03
+   */
+  public static byte[] string2bufferO(String str) {
+    if (str == null) {
+      return new byte[] {};
+    }
+    byte[] buffer = new byte[str.length()];
+    for (int i = 0; i < str.length(); i++) {
+      char c = str.charAt(i);
+      buffer[i] = (byte) Integer.parseInt(c + "");
+    }
+    return buffer;
   }
 }

@@ -89,6 +89,11 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<SmartV
     return this;
   }
 
+  /**
+   * 尾递归，删除一定个数
+   * @param startIndex
+   * @return
+   */
   public BaseRecyclerAdapter<T> removeHalf(int startIndex) {
     if (startIndex >= mList.size()) {
       return this;

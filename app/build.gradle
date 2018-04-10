@@ -51,11 +51,19 @@ dependencies {
 
   implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.3'
 
-  implementation 'cn.bingoogolapple:bga-adapter:1.1.5@aar'
+//  implementation 'cn.bingoogolapple:bga-adapter:1.1.5@aar'
 
   implementation('com.hwangjr.rxbus:rxbus:1.0.5') {
     exclude group: 'com.jakewharton.timber', module: 'timber'
   }
   compileOnly 'org.glassfish:javax.annotation:10.0-b28'
   compileOnly 'org.projectlombok:lombok:1.16.8'
+
+  implementation 'com.simplecityapps:recyclerview-fastscroll:1.0.17'
+
+  implementation('cn.qqtheme.framework:WheelPicker:1.5.5') {
+    exclude group: 'com.android.support'
+  }
+
+
 }
