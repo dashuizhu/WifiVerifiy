@@ -7,6 +7,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,10 +25,12 @@ import com.hwangjr.rxbus.thread.EventThread;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
+import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 import com.verifywifi.AppConstants;
 import com.verifywifi.MyApplication;
 import com.verifywifi.R;
 import com.verifywifi.adapter.BaseRecyclerAdapter;
+import com.verifywifi.adapter.DataAdapter;
 import com.verifywifi.adapter.SmartViewHolder;
 import com.verifywifi.bean.DataBean;
 import com.verifywifi.database.DataDao;
@@ -53,7 +56,7 @@ import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
  *
  * @author zhuj 2018/4/9 上午10:11
  */
-public class HomeFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class HomeFragment extends BaseFragment implements AdapterView.OnItemClickListener {
 
   private final String TAG = this.getClass().getSimpleName();
 
@@ -77,12 +80,12 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
   private final int LIST_REMOVE_SIZE = 2000;
 
   @BindView(R.id.tv_content) TextView mTvContent;
-  @BindView(R.id.recyclerView) RecyclerView mRecyclerView;
+  @BindView(R.id.recyclerView) FastScrollRecyclerView mRecyclerView;
   @BindView(R.id.refreshLayout) SmartRefreshLayout mRefreshLayout;
 
   private Unbinder mUnbinder;
   //private List<DataBean> mBeanList = new ArrayList<>();
-  private BaseRecyclerAdapter mAdapter;
+  private DataAdapter mAdapter;
 
   /**
    * 避免刷新太快， 累计一定数量数据，再添加刷新
@@ -111,8 +114,13 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     // Inflate the layout for this fragment
     View view = inflater.inflate(R.layout.fragment_home, container, false);
     mUnbinder = ButterKnife.bind(this, view);
+    if (MyApplication.getApp().getWifiService() != null) {
+      mTvContent.setText(MyApplication.getApp().getWifiService().getStateStr());
+    }
+    registerRxBus();
+
     initViews();
-    RxBus.get().register(this);
+
     createAddObservable();
     return view;
   }
@@ -120,7 +128,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
   @Override
   public void onDestroyView() {
     mUnbinder.unbind();
-    RxBus.get().unregister(this);
+    unRegisterRxBus();
     disposeDelayAdd();
     super.onDestroyView();
   }
@@ -166,10 +174,6 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
 
   private void initViews() {
 
-    if (MyApplication.getApp().getWifiService() != null) {
-      mTvContent.setText(MyApplication.getApp().getWifiService().getStateStr());
-    }
-
     mRefreshLayout.setEnableRefresh(false);
     mRefreshLayout.setEnableLoadmore(true);
     mRefreshLayout.setOnLoadmoreListener(new OnLoadmoreListener() {
@@ -184,15 +188,8 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     mRecyclerView.setLayoutManager(mLayoutManager);
     mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), VERTICAL));
     ((SimpleItemAnimator) mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
-
-    mAdapter = new BaseRecyclerAdapter<DataBean>(new ArrayList<DataBean>(), R.layout.recycler_home,
-            this) {
-      @Override
-      protected void onBindViewHolder(SmartViewHolder holder, DataBean model, int position) {
-        holder.text(R.id.tv_cmd, model.getCmd());
-        holder.text(R.id.tv_time, AppUtils.timeFormat(model.getTime()));
-      }
-    };
+    mAdapter = new DataAdapter(new ArrayList<DataBean>());
+    mAdapter.setOnItemClickListener(this);
     mRecyclerView.setAdapter(mAdapter);
     mRecyclerView.getAdapter().notifyDataSetChanged();
 
@@ -220,6 +217,11 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
         }
       }
     });
+
+    //这里有可能 ，service 实例已经存在了，运行了， 但是还没传递给Application，有个时间差
+    if (MyApplication.getApp().getWifiService() != null) {
+      mTvContent.setText(MyApplication.getApp().getWifiService().getStateStr());
+    }
   }
 
   @Override

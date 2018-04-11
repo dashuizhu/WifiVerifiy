@@ -3,26 +3,65 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
     android:orientation="horizontal"
+    android:paddingBottom="@dimen/view_padding"
+    android:paddingTop="@dimen/view_padding"
+    android:weightSum="8"
     tools:context="com.verifywifi.ui.MainActivity">
 
     <TextView
         android:id="@+id/tv_cmd"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:gravity="center"
+        android:text="名称"
+        style="@style/text_normal" />
+
+    <TextView
+        android:id="@+id/tv_vin"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:paddingBottom="@dimen/view_padding"
-        android:paddingLeft="@dimen/fab_margin"
-        android:paddingTop="@dimen/view_padding"
-        android:text="Hello World!" />
+        android:gravity="center"
+        android:text="VIN号"
+        style="@style/text_normal" />
 
     <TextView
         android:id="@+id/tv_time"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="2"
-        android:paddingBottom="@dimen/view_padding"
-        android:paddingTop="@dimen/view_padding"
-        android:text="Hello World!" />
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="时间"
+        style="@style/text_normal" />
+
+    <TextView
+        android:id="@+id/tv_"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="时间"
+        style="@style/text_normal" />
+
+    <TextView
+        android:id="@+id/tv_torque"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="扭矩"
+        style="@style/text_normal" />
+
+    <TextView
+        android:id="@+id/tv_angle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="角度"
+        style="@style/text_normal" />
 
 </LinearLayout>

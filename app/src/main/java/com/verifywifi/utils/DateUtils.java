@@ -34,7 +34,7 @@ public class DateUtils {
    * @return
    */
   public static int[] getDate(String startTime) {
-    int[] buff = new int[5];
+    int[] buff = new int[6];
     Date date;
     try {
       date = sSDF.parse(startTime);
@@ -49,6 +49,7 @@ public class DateUtils {
     buff[2] = calendar.get(Calendar.DAY_OF_MONTH);
     buff[3] = calendar.get(Calendar.HOUR_OF_DAY);
     buff[4] = calendar.get(Calendar.MINUTE);
+    buff[5] = calendar.get(Calendar.SECOND);
     return buff;
   }
 

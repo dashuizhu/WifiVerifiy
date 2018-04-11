@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import com.hwangjr.rxbus.RxBus;
+import com.verifywifi.agreement.CmdPackage;
 import com.verifywifi.agreement.Encrypt;
 import com.verifywifi.bean.StateBean;
 import com.verifywifi.utils.AppUtils;
@@ -17,6 +19,7 @@ import io.reactivex.schedulers.Schedulers;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InterruptedIOException;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
@@ -46,7 +49,7 @@ public class WifiServerService extends Service {
   /**
    * 最大连接数
    */
-  private final static int MAX_CONNECT_CLIENT = 3;
+  private final static int MAX_CONNECT_CLIENT = 1;
 
   private final IBinder mBinder = new LocalBinder();
 
@@ -90,7 +93,21 @@ public class WifiServerService extends Service {
         startServer();
       }
     });
+    mEncrypt.addOnParseListener(new Encrypt.OnParseListener() {
+      @Override
+      public void parse(byte type) {
+        //添加解析结果， 解析一条数据，就回复发送一条数据
+        writeAgreement(mSocketList.get(0), CmdPackage.receiveCMD(type));
+      }
+    });
     return mBinder;
+  }
+
+  /**
+   * 获得工作状态
+   */
+  public int getWorkSate() {
+    return mWorkState;
   }
 
   public class LocalBinder extends Binder {
@@ -120,7 +137,7 @@ public class WifiServerService extends Service {
         //一直等待，连接
         try {
 
-          if (mSocketList.size() > MAX_CONNECT_CLIENT) {
+          if (mSocketList.size() >= MAX_CONNECT_CLIENT) {
             Thread.sleep(2000);
           } else {
             Socket socket = mServerSocket.accept();
@@ -240,7 +257,9 @@ public class WifiServerService extends Service {
         str = "未开启";
         break;
       case StateBean.WAIT:
-        str = "等待连接";
+        String ip = AppUtils.getLocalIpAddress(this) + ":" + AppConstants.SERVER_PORT;
+        Log.e(TAG, " ip:" + ip);
+        str = ip + " 等待客户端连接";
         break;
       case StateBean.CONNECT:
         str = mClientAddress;
@@ -248,5 +267,21 @@ public class WifiServerService extends Service {
       default:
     }
     return str;
+  }
+
+  /**
+   * 写数据
+   */
+  private void writeAgreement(Socket socket, byte[] cmd) {
+    if (socket.isConnected()) {
+      OutputStream out = null;
+      try {
+        out = socket.getOutputStream();
+        out.write(Encrypt.packageCmd(cmd));
+        out.flush();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
   }
 }

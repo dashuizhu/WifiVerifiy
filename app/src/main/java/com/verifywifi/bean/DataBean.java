@@ -10,6 +10,39 @@ public class DataBean {
 
   private long time;
   private String cmd;
+  private String vin;
+  private String name;
+  /**
+   * 数据id
+   */
+  private long id;
+  /**
+   * 状态
+   */
+  private int state;
+  /**
+   * 螺栓号
+   */
+  private int bolt;
 
+  /**
+   * 扭矩
+   */
+  private int torque;
+
+  /**
+   * 扭矩状态
+   */
+  private int torqueState;
+
+  /**
+   * 角度值
+   */
+  private int angle;
+
+  /**
+   * 角度状态
+   */
+  private int angleState;
 
 }

@@ -1,5 +1,7 @@
 package com.verifywifi.ui;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
@@ -13,17 +15,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import cn.qqtheme.framework.picker.DateTimePicker;
+import com.buddy.libwheel.WheelDateTimeActivity;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 import com.verifywifi.R;
-import com.verifywifi.adapter.BaseRecyclerAdapter;
-import com.verifywifi.adapter.SmartViewHolder;
+import com.verifywifi.adapter.DataAdapter;
 import com.verifywifi.bean.DataBean;
 import com.verifywifi.ui.presenter.DatePresenter;
-import com.verifywifi.utils.AppUtils;
 import com.verifywifi.utils.DateUtils;
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,6 +38,12 @@ import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
  */
 public class SearchFragment extends BaseFragment {
 
+  /**
+   * 获取结束时间
+   */
+  private static final int ACTIVITY_END_TIME = 11;
+  private static final int ACTIVITY_START_TIME = 12;
+
   @BindView(R.id.btn_time_start) Button mBtnTimeStart;
   @BindView(R.id.btn_time_end) Button mBtnTimeEnd;
   @BindView(R.id.recyclerView) FastScrollRecyclerView mRecyclerView;
@@ -47,15 +53,13 @@ public class SearchFragment extends BaseFragment {
   @BindView(R.id.btn_query) Button mBtnQuery;
 
   private Unbinder mUnbinder;
-  private BaseRecyclerAdapter<DataBean> mAdapter;
-  private List<DataBean> mBeanList = new ArrayList<>();
+  private DataAdapter mAdapter;
 
   private DatePresenter mPresenter;
 
   private long mQueryEndTime;
 
   public SearchFragment() {
-    // Required empty public constructor
   }
 
   @Override
@@ -97,104 +101,26 @@ public class SearchFragment extends BaseFragment {
     mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), VERTICAL));
     ((SimpleItemAnimator) mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
 
-    mAdapter = new BaseRecyclerAdapter<DataBean>(mBeanList, R.layout.recycler_home, null) {
-      @Override
-      protected void onBindViewHolder(SmartViewHolder holder, DataBean model, int position) {
-        holder.text(R.id.tv_cmd, model.getCmd());
-        holder.text(R.id.tv_time, AppUtils.timeFormat(model.getTime()));
-      }
-    };
+    mAdapter = new DataAdapter(new ArrayList<DataBean>());
+    //mAdapter.setOnItemClickListener(this);
     mRecyclerView.setAdapter(mAdapter);
     mRecyclerView.getAdapter().notifyDataSetChanged();
-
-    //mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-    //  @Override
-    //  public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-    //    super.onScrollStateChanged(recyclerView, newState);
-    //    switch (newState) {
-    //      //空闲状态
-    //      case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
-    //        int position = mLayoutManager.findFirstVisibleItemPosition();
-    //        if (!mIsTop && position == 0) {
-    //          mIsTop = true;
-    //        } else if (mIsTop && position != 0) {
-    //          mIsTop = false;
-    //        }
-    //        break;
-    //      //滚动状态
-    //      case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
-    //        //触摸后滚动
-    //      case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
-    //        mIsTop = false;
-    //        break;
-    //      default:
-    //    }
-    //  }
-    //});
 
     Date date = new Date();
     mBtnDateStart.setText(DateUtils.getDateString(date));
     mBtnDateEnd.setText(DateUtils.getDateString(date));
   }
 
-  @OnClick({ R.id.btn_date_start, R.id.btn_time_start, R.id.btn_date_end, R.id.btn_time_end })
+  @OnClick({ R.id.btn_date_start, R.id.btn_date_end })
   public void onViewClicked(View view) {
-    DateTimePicker picker;
-    int[] time;
     switch (view.getId()) {
       case R.id.btn_date_start:
-        picker = new DateTimePicker(getActivity(), DateTimePicker.HOUR_24);
-        picker.setDateRangeStart(2017, 1, 1);
-        picker.setDateRangeEnd(2025, 11, 11);
-        picker.setTimeRangeEnd(0, 0);
-        picker.setTimeRangeEnd(23, 59);
-        picker.setCycleDisable(false);
-        picker.setTopLineColor(0x99FF0000);
-        //picker.setLabelTextColor(0xFFFF0000);
-        picker.setDividerColor(0xFFFF0000);
-        picker.setOnDateTimePickListener(new DateTimePicker.OnYearMonthDayTimePickListener() {
-          @Override
-          public void onDateTimePicked(String year, String month, String day, String hour,
-                  String minute) {
-            //showToast(year + "-" + month + "-" + day + " " + hour + ":" + minute);
-            mBtnDateStart.setText(year + "-" + month + "-" + day + " " + hour + ":" + minute);
-          }
-        });
-
         String startTime = mBtnDateStart.getText().toString();
-        time = DateUtils.getDate(startTime);
-        picker.setSelectedItem(time[0], time[1], time[2], time[3], time[4]);
-
-        picker.show();
-
-        break;
-      case R.id.btn_time_start:
+        startActivityForResult(getDateTimeIntent(startTime), ACTIVITY_START_TIME);
         break;
       case R.id.btn_date_end:
-        picker = new DateTimePicker(getActivity(), DateTimePicker.HOUR_24);
-        picker.setDateRangeStart(2017, 1, 1);
-        picker.setDateRangeEnd(2025, 11, 11);
-        picker.setTimeRangeEnd(0, 0);
-        picker.setTimeRangeEnd(23, 59);
-        picker.setTopLineColor(0x99FF0000);
-        picker.setCycleDisable(false);
-        picker.setDividerColor(0xFFFF0000);
-        picker.setOnDateTimePickListener(new DateTimePicker.OnYearMonthDayTimePickListener() {
-          @Override
-          public void onDateTimePicked(String year, String month, String day, String hour,
-                  String minute) {
-            //showToast(year + "-" + month + "-" + day + " " + hour + ":" + minute);
-            mBtnDateEnd.setText(year + "-" + month + "-" + day + " " + hour + ":" + minute);
-          }
-        });
-
         String endTime = mBtnDateEnd.getText().toString();
-        time = DateUtils.getDate(endTime);
-        picker.setSelectedItem(time[0], time[1], time[2], time[3], time[4]);
-
-        picker.show();
-        break;
-      case R.id.btn_time_end:
+        startActivityForResult(getDateTimeIntent(endTime), ACTIVITY_END_TIME);
         break;
       default:
     }
@@ -232,7 +158,6 @@ public class SearchFragment extends BaseFragment {
     if (successObj instanceof List) {
       int oldIndex = mAdapter.getData().size();
       List<DataBean> list = (List<DataBean>) successObj;
-      mBeanList.addAll(list);
       mAdapter.getData().addAll(list);
       mAdapter.notifyItemRangeInserted(oldIndex, list.size());
 
@@ -240,5 +165,47 @@ public class SearchFragment extends BaseFragment {
         mRefreshLayout.setLoadmoreFinished(true);
       }
     }
+  }
+
+  @Override
+  public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if (resultCode != Activity.RESULT_OK) {
+      return;
+    }
+    switch (requestCode) {
+      case ACTIVITY_END_TIME:
+        mBtnDateEnd.setText(getStrByDate(data));
+        break;
+      case ACTIVITY_START_TIME:
+        mBtnDateStart.setText(getStrByDate(data));
+        break;
+      default:
+    }
+  }
+
+  private Intent getDateTimeIntent(String str) {
+    int[] time = DateUtils.getDate(str);
+    Intent intent = new Intent(getContext(), WheelDateTimeActivity.class);
+    intent.putExtra(WheelDateTimeActivity.KEY_RECYCLER_YEAR, time[0]);
+    intent.putExtra(WheelDateTimeActivity.KEY_RECYCLER_MONTH, time[1]);
+    intent.putExtra(WheelDateTimeActivity.KEY_RECYCLER_DAY, time[2]);
+    intent.putExtra(WheelDateTimeActivity.KEY_RECYCLER_HOUR, time[3]);
+    intent.putExtra(WheelDateTimeActivity.KEY_RECYCLER_MINUTE, time[4]);
+    intent.putExtra(WheelDateTimeActivity.KEY_RECYCLER_SECOND, time[5]);
+    return intent;
+  }
+
+  private String getStrByDate(Intent data) {
+    int year = data.getIntExtra(WheelDateTimeActivity.KEY_RECYCLER_YEAR, 2018);
+    int month = data.getIntExtra(WheelDateTimeActivity.KEY_RECYCLER_MONTH, 1);
+    int day = data.getIntExtra(WheelDateTimeActivity.KEY_RECYCLER_DAY, 1);
+    int hour = data.getIntExtra(WheelDateTimeActivity.KEY_RECYCLER_HOUR, 1);
+    int minute = data.getIntExtra(WheelDateTimeActivity.KEY_RECYCLER_MINUTE, 1);
+    int second = data.getIntExtra(WheelDateTimeActivity.KEY_RECYCLER_SECOND, 1);
+
+    String str =
+            String.format("%04d-%02d-%02d %02d:%02d:%02d", year, month, day, hour, minute, second);
+    return str;
   }
 }

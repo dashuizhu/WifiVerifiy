@@ -13,17 +13,22 @@ import com.verifywifi.utils.MyLog;
  */
 public class CmdParse {
 
+  private final static byte CMD_DATA = 0x01;
+
   private final static String TAG = CmdParse.class.getSimpleName();
-  static int count;
 
-  public static void parse(byte[] buff, int length) {
-    String str = MyHexUtils.buffer2String(buff, length);
+  public static void parse(byte[] buff) {
+    String str = MyHexUtils.buffer2String(buff);
     MyLog.w(TAG, "parse: " + str);
-    count++;
 
-    DataBean bean = new DataBean();
-    bean.setCmd(" " + MyHexUtils.buffer2String(buff, length));
-    bean.setTime(System.currentTimeMillis());
-    RxBus.get().post(AppConstants.RXBUS_PUSH, bean);
+    switch (buff[0]) {
+      case CMD_DATA:
+        DataBean bean = new DataBean();
+        bean.setCmd(" " + MyHexUtils.buffer2String(buff));
+        bean.setTime(System.currentTimeMillis());
+        RxBus.get().post(AppConstants.RXBUS_PUSH, bean);
+        break;
+    }
+
   }
 }

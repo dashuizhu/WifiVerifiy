@@ -14,6 +14,10 @@ import com.verifywifi.R;
 import com.verifywifi.utils.AppUtils;
 import com.verifywifi.utils.MyLog;
 
+/**
+ * 主页
+ * @author zhuj 2018/4/11 上午10:16
+ */
 public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener {
 
   private final static String TAG = MainActivity.class.getSimpleName();
@@ -84,7 +88,8 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
 
   private void showFragment(int position, FragmentTransaction fragmentTransaction) {
     switch (position) {
-      case 0://推荐
+      case 0:
+        //首页
         if (mHomeFragment == null) {
           mHomeFragment = new HomeFragment();
           fragmentTransaction.add(R.id.layout_contains, mHomeFragment, TAG_HOME);
@@ -92,7 +97,8 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
           fragmentTransaction.show(mHomeFragment);
         }
         break;
-      case 1://专家说
+      case 1:
+        //搜索
         if (mSearchFragment == null) {
           mSearchFragment = new SearchFragment();
           fragmentTransaction.add(R.id.layout_contains, mSearchFragment, TAG_SEARCH);

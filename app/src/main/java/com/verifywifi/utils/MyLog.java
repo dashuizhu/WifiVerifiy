@@ -28,4 +28,8 @@ public class MyLog {
   public static void i(String tag, String con) {
     Log.e(PREFIX + tag, con);
   }
+
+  public static void test(String tag, String con) {
+    Log.e(PREFIX + tag, con);
+  }
 }

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import com.hwangjr.rxbus.RxBus;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshFooterCreater;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshHeaderCreater;
@@ -15,6 +16,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
+import com.umeng.commonsdk.UMConfigure;
 import com.verifywifi.database.BuddyRealm;
 import io.realm.Realm;
 
@@ -36,6 +38,9 @@ public class MyApplication extends Application {
 
     Realm.init(this);
     BuddyRealm.setDefaultRealmForUser("wifiSystem");
+
+    UMConfigure.init(this, UMConfigure.DEVICE_TYPE_PHONE, null);
+    //UMConfigure.setLogEnabled(true);
   }
 
   public WifiServerService getWifiService() {
@@ -50,6 +55,10 @@ public class MyApplication extends Application {
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
       mWifiServerService = ((WifiServerService.LocalBinder) service).getService();
+
+      //mconnect 过程又延迟，service已经存在，并且rxbus通知了homeFragment， 而这里service还是为null
+      // 到这里再通知一次，HomeFragment刷新UI
+      RxBus.get().post(AppConstants.RXBUS_STATE, mWifiServerService.getWorkSate());
     }
 
     @Override
