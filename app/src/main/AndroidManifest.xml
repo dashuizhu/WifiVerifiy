@@ -32,13 +32,16 @@
 
         <service android:name=".WifiServerService" />
 
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="c05c9a0ae92fa7ae610c8a23463851f040c6d42c" />
 
         <!-- 友盟统计APPKEY -->
-        <meta-data
-            android:name="UMENG_APPKEY"
-            android:value="5acc8971b27b0a14de0000a3" />
+        <!--<meta-data-->
+            <!--android:name="UMENG_APPKEY"-->
+            <!--android:value="5acc8971b27b0a14de0000a3" />-->
 
-        <meta-data android:value="UMENG_CHANNEL" android:name="umeng_channel"/>
+        <!--<meta-data android:value="UMENG_CHANNEL" android:name="umeng_channel"/>-->
     </application>
 
 </manifest>

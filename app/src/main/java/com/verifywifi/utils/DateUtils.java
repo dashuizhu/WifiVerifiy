@@ -10,7 +10,8 @@ import java.util.Date;
  */
 public class DateUtils {
 
-  private final static SimpleDateFormat sSDF = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+  private final static SimpleDateFormat sSDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+  private final static SimpleDateFormat sSDF2 = new SimpleDateFormat("yyyy-MM-dd:HH:mm:ss");
 
   /**
    *
@@ -27,6 +28,18 @@ public class DateUtils {
     }
     return date.getTime();
   }
+
+  public static long getTimeMillByMill(String time) {
+    Date date;
+    try {
+      date = sSDF2.parse(time);
+    } catch (ParseException e) {
+      e.printStackTrace();
+      date = new Date();
+    }
+    return date.getTime();
+  }
+
 
   /**
    * 年月日时分

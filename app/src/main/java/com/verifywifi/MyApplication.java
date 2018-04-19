@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+//import com.crashlytics.android.Crashlytics;
 import com.hwangjr.rxbus.RxBus;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshFooterCreater;
@@ -16,8 +17,9 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
-import com.umeng.commonsdk.UMConfigure;
+//import com.umeng.commonsdk.UMConfigure;
 import com.verifywifi.database.BuddyRealm;
+import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 
 /**
@@ -39,7 +41,10 @@ public class MyApplication extends Application {
     Realm.init(this);
     BuddyRealm.setDefaultRealmForUser("wifiSystem");
 
-    UMConfigure.init(this, UMConfigure.DEVICE_TYPE_PHONE, null);
+    //UMConfigure.init(this, UMConfigure.DEVICE_TYPE_PHONE, null);
+
+    //Fabric.with(this, new Crashlytics());
+
     //UMConfigure.setLogEnabled(true);
   }
 

@@ -15,7 +15,7 @@ public class DataBean {
   /**
    * 数据id
    */
-  private long id;
+  private String id;
   /**
    * 状态
    */

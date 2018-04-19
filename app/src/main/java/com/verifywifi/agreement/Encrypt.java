@@ -1,11 +1,13 @@
 package com.verifywifi.agreement;
 
+import android.util.Log;
 import com.verifywifi.utils.MyByteUtils;
 import com.verifywifi.utils.MyHexUtils;
 import com.verifywifi.utils.MyLog;
 
 /**
  * 数据缓存，识别成协议， 去除包 获取 数据内容。
+ *
  * @author zhuj 2018/4/10 下午3:33.
  */
 public class Encrypt {
@@ -94,10 +96,21 @@ public class Encrypt {
     }
   }
 
+  /**
+   * 解析内容
+   */
   private void processData(byte[] buffer, int start, int length) {
+    byte check = buffer[start + 2];
     //-4 是减去 包头、长度、校验、包尾巴
     byte[] bbb = new byte[length - 4];
     System.arraycopy(buffer, start + 3, bbb, 0, bbb.length);
+
+    int b = bbb[1] ^ bbb[2];
+    if (check != b) {
+      Log.w(TAG, "校验值错误");
+      return;
+    }
+
     CmdParse.parse(bbb);
     if (mListener != null) {
       mListener.parse(bbb[0]);
@@ -112,8 +125,8 @@ public class Encrypt {
     buff[0] = CMD_HEAD;
     buff[1] = (byte) MyByteUtils.byteToInt(cmd.length);
     //buff[2]
-    if (cmd.length>1) {
-      buff[2] = (byte) (cmd[0] ^ cmd[1]);
+    if (cmd.length > 2) {
+      buff[2] = (byte) (cmd[1] ^ cmd[2]);
     } else {
       buff[2] = cmd[0];
     }
