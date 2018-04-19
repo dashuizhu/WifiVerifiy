@@ -19,7 +19,7 @@ import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 //import com.umeng.commonsdk.UMConfigure;
 import com.verifywifi.database.BuddyRealm;
-import io.fabric.sdk.android.Fabric;
+//import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 
 /**

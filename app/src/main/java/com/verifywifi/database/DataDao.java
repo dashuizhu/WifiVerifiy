@@ -79,7 +79,7 @@ public class DataDao extends RealmObject {
   }
 
   /**
-   * 删除置顶时间之前 的数据
+   * 删除指定时间之前 的数据
    * @param time
    */
   public static void cleanOld(long time) {
@@ -93,6 +93,5 @@ public class DataDao extends RealmObject {
       results.deleteAllFromRealm();
     }
     realm.commitTransaction();
-
   }
 }

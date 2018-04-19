@@ -19,11 +19,11 @@ public class DataBean {
   /**
    * 状态
    */
-  private int state;
+  private boolean state;
   /**
    * 螺栓号
    */
-  private int bolt;
+  private String bolt;
 
   /**
    * 扭矩
@@ -44,5 +44,9 @@ public class DataBean {
    * 角度状态
    */
   private int angleState;
+
+  public double getTorquValue() {
+    return  torque / 100.00d;
+  }
 
 }

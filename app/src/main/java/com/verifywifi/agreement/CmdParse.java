@@ -5,7 +5,6 @@ import com.verifywifi.AppConstants;
 import com.verifywifi.bean.DataBean;
 import com.verifywifi.utils.DateUtils;
 import com.verifywifi.utils.MyHexUtils;
-import com.verifywifi.utils.MyLog;
 
 /**
  * 数据解析
@@ -15,77 +14,188 @@ import com.verifywifi.utils.MyLog;
 public class CmdParse {
 
   private final static byte CMD_DATA_F = 0x46;
-  private final static byte CMD_DATA_D = 0x4d;
+  private final static byte CMD_DATA_M = 0x4d;
 
   private final static String TAG = CmdParse.class.getSimpleName();
 
   public static void parse(byte[] buff) {
-    //String str = MyHexUtils.buffer2String(buff);
+    String str2 = MyHexUtils.buffer2String(buff);
     //MyLog.w(TAG, "parse: " + str);
 
+    DataBean bean = null;
+    try {
+      switch (buff[0]) {
+        case CMD_DATA_F:
+          bean = parseF(buff);
+          break;
+        case CMD_DATA_M:
+          bean = parseM(buff);
+          break;
+
+        default:
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    if (bean != null) {
+      RxBus.get().post(AppConstants.RXBUS_PUSH, bean);
+    }
+  }
+
+  /**
+   * 解析
+   */
+  private static DataBean parseF(byte[] buff) {
     byte[] buffer;
     String str = null;
     int value;
-    switch (buff[0]) {
-      case CMD_DATA_F:
-      case CMD_DATA_D:
-        DataBean bean = new DataBean();
+    int startIndex = 1;
 
-        //name 25字节
-        buffer = new byte[25];
-        System.arraycopy(buff, 1, buffer, 0, buffer.length);
-        String name = MyHexUtils.buffer2String(buffer);
-        bean.setName(name);
+    DataBean bean = new DataBean();
+    //name 25字节
+    buffer = new byte[25];
+    System.arraycopy(buff, startIndex, buffer, 0, buffer.length);
+    String name = new String(buffer).trim();
+    bean.setName(name);
+    startIndex += buffer.length;
 
-        //VIN PF25 ， PM 40
-        buffer = new byte[25];
-        System.arraycopy(buff, 26, buffer, 0, buffer.length);
-        String vin = MyHexUtils.buffer2String(buffer);
-        bean.setVin(vin);
+    //VIN PF25 ， PM 40
+    buffer = new byte[40];
+    System.arraycopy(buff, startIndex, buffer, 0, buffer.length);
+    String vin = new String(buffer).trim();
+    bean.setVin(vin);
+    startIndex += buffer.length;
 
-        //时间 yyyy-MM-dd:HH:mm:ss
-        buffer = new byte[19];
-        System.arraycopy(buff, 51, buffer, 0, buffer.length);
-        str = MyHexUtils.buffer2String(buffer);
-        long time = DateUtils.getTimeMillByMill(str);
-        bean.setTime(time);
+    //时间 yyyy-MM-dd:HH:mm:ss
+    buffer = new byte[19];
+    System.arraycopy(buff, startIndex, buffer, 0, buffer.length);
+    str = new String(buffer).trim();
+    long time = DateUtils.getTimeMillByMill(str);
+    bean.setTime(time);
+    startIndex += buffer.length;
 
-        //id号
-        buffer = new byte[10];
-        System.arraycopy(buff, 70, buffer, 0, buffer.length);
-        str = MyHexUtils.buffer2String(buffer);
-        bean.setId(str);
+    //id号
+    buffer = new byte[10];
+    System.arraycopy(buff, startIndex, buffer, 0, buffer.length);
+    str = new String(buffer);
+    bean.setId(str);
+    startIndex += buffer.length;
 
-        //状态
-        byte state= buff[82];
-        bean.setState(state);
+    //螺栓号
+    buffer = new byte[2];
+    buffer[0] = buff[startIndex];
+    buffer[1] = buff[startIndex + 1];
+    str = new String(buffer);
+    bean.setBolt(str);
+    startIndex += 2;
 
-        buffer = new byte[6];
-        System.arraycopy(buff, 83, buffer, 0, buffer.length);
-        str = MyHexUtils.buffer2String(buffer);
-        value = Integer.parseInt(str);
-        bean.setTorque(value);
+    //状态
+    bean.setState(buff[startIndex] == 0x31);
+    startIndex += 1;
 
-        byte torqueState = buff[89];
-        bean.setTorqueState(torqueState);
+    //扭矩值
+    buffer = new byte[6];
+    System.arraycopy(buff, startIndex, buffer, 0, buffer.length);
+    str = new String(buffer);
+    value = Integer.parseInt(str);
+    bean.setTorque(value);
+    startIndex += buffer.length;
 
-        buffer = new byte[5];
-        System.arraycopy(buff, 94, buffer, 0, buffer.length);
-        str = MyHexUtils.buffer2String(buffer);
-        value = Integer.parseInt(str);
-        bean.setAngle(value);
+    byte torqueState = buff[startIndex];
+    // 0x30 0x31 0x32 分别代表 0、1、2
+    bean.setTorqueState(torqueState - 0x30);
+    startIndex += 1;
 
+    buffer = new byte[7];
+    System.arraycopy(buff, startIndex, buffer, 0, buffer.length);
+    str = new String(buffer);
+    value = Integer.parseInt(str);
+    bean.setAngle(value);
+    startIndex += buffer.length;
 
-        byte angleState = buff[104];
-        bean.setAngleState(angleState);
+    byte angleState = buff[startIndex];
+    // 0x30 0x31 0x32 分别代表 0、1、2
+    bean.setAngleState(angleState - 0x30);
+    startIndex += 1;
+    return bean;
+  }
 
-        bean.setCmd(" " + MyHexUtils.buffer2String(buff));
-        bean.setTime(System.currentTimeMillis());
-        RxBus.get().post(AppConstants.RXBUS_PUSH, bean);
-        break;
+  /**
+   * 解析
+   */
+  private static DataBean parseM(byte[] buff) {
+    byte[] buffer;
+    String str = null;
+    int value;
+    int startIndex = 1;
 
-      default:
-    }
+    DataBean bean = new DataBean();
+    //name 25字节
+    buffer = new byte[25];
+    System.arraycopy(buff, startIndex, buffer, 0, buffer.length);
+    String name = new String(buffer).trim();
+    bean.setName(name);
+    startIndex += buffer.length;
 
+    //VIN PF25 ， PM 40
+    buffer = new byte[25];
+    System.arraycopy(buff, startIndex, buffer, 0, buffer.length);
+    String vin = new String(buffer).trim();
+    bean.setVin(vin);
+    startIndex += buffer.length;
+
+    //时间 yyyy-MM-dd:HH:mm:ss
+    buffer = new byte[19];
+    System.arraycopy(buff, startIndex, buffer, 0, buffer.length);
+    str = new String(buffer).trim();
+    long time = DateUtils.getTimeMillByMill(str);
+    bean.setTime(time);
+    startIndex += buffer.length;
+
+    //id号
+    buffer = new byte[10];
+    System.arraycopy(buff, startIndex, buffer, 0, buffer.length);
+    str = new String(buffer);
+    bean.setId(str);
+    startIndex += buffer.length;
+
+    //螺栓号
+    buffer = new byte[2];
+    buffer[0] = buff[startIndex];
+    buffer[1] = buff[startIndex + 1];
+    str = new String(buffer);
+    bean.setBolt(str);
+    startIndex += 2;
+
+    //状态
+    bean.setState(buff[startIndex] == 0x31);
+    startIndex += 1;
+
+    //扭矩值
+    buffer = new byte[6];
+    System.arraycopy(buff, startIndex, buffer, 0, buffer.length);
+    str = new String(buffer);
+    value = Integer.parseInt(str);
+    bean.setTorque(value);
+    startIndex += buffer.length;
+
+    byte torqueState = buff[startIndex];
+    // 0x30 0x31 0x32 分别代表 0、1、2
+    bean.setTorqueState(torqueState - 0x30);
+    startIndex += 1;
+
+    buffer = new byte[5];
+    System.arraycopy(buff, startIndex, buffer, 0, buffer.length);
+    str = new String(buffer);
+    value = Integer.parseInt(str);
+    bean.setAngle(value);
+    startIndex += buffer.length;
+
+    byte angleState = buff[startIndex];
+    // 0x30 0x31 0x32 分别代表 0、1、2
+    bean.setAngleState(angleState - 0x30);
+    startIndex += 1;
+    return bean;
   }
 }
