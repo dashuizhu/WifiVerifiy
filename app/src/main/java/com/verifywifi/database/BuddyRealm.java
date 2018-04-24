@@ -12,7 +12,7 @@ public class BuddyRealm {
 
   private final static String TAG = BuddyRealm.class.getSimpleName();
 
-  final static int REALM_VERSION = 1;
+  final static int REALM_VERSION = 2;
 
   /**
    * @param userId 用户ID
@@ -26,9 +26,9 @@ public class BuddyRealm {
     }
     RealmConfiguration config = new RealmConfiguration.Builder().name(userId)
             .schemaVersion(REALM_VERSION)
-            .migration(new CustomRealmMigration())
+            //.migration(new CustomRealmMigration())
             //migration 与 delete 有冲突， 会优先执行delete
-            //.deleteRealmIfMigrationNeeded()
+            .deleteRealmIfMigrationNeeded()
             .build();
     Realm.setDefaultConfiguration(config);
     ////android debug模式下， chrome浏览器查看数据库 chrome://inspect/#devices

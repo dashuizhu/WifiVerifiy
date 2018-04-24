@@ -7,11 +7,20 @@
     android:orientation="horizontal"
     android:paddingBottom="@dimen/view_padding"
     android:paddingTop="@dimen/view_padding"
-    android:weightSum="8"
+    android:weightSum="12"
     tools:context="com.verifywifi.ui.MainActivity">
 
     <TextView
-        android:id="@+id/tv_cmd"
+        android:id="@+id/tv_state"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="状态"
+        style="@style/text_normal" />
+
+    <TextView
+        android:id="@+id/tv_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="2"
@@ -23,7 +32,7 @@
         android:id="@+id/tv_vin"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="3"
         android:gravity="center"
         android:text="VIN号"
         style="@style/text_normal" />
@@ -32,19 +41,11 @@
         android:id="@+id/tv_time"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="3"
         android:gravity="center"
         android:text="时间"
         style="@style/text_normal" />
 
-    <TextView
-        android:id="@+id/tv_"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="时间"
-        style="@style/text_normal" />
 
     <TextView
         android:id="@+id/tv_torque"

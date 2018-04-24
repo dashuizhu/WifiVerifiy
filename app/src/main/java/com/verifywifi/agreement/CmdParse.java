@@ -61,7 +61,7 @@ public class CmdParse {
     startIndex += buffer.length;
 
     //VIN PF25 ， PM 40
-    buffer = new byte[40];
+    buffer = new byte[25];
     System.arraycopy(buff, startIndex, buffer, 0, buffer.length);
     String vin = new String(buffer).trim();
     bean.setVin(vin);
@@ -79,7 +79,7 @@ public class CmdParse {
     buffer = new byte[10];
     System.arraycopy(buff, startIndex, buffer, 0, buffer.length);
     str = new String(buffer);
-    bean.setId(str);
+    bean.setNodeId(str);
     startIndex += buffer.length;
 
     //螺栓号
@@ -107,7 +107,7 @@ public class CmdParse {
     bean.setTorqueState(torqueState - 0x30);
     startIndex += 1;
 
-    buffer = new byte[7];
+    buffer = new byte[5];
     System.arraycopy(buff, startIndex, buffer, 0, buffer.length);
     str = new String(buffer);
     value = Integer.parseInt(str);
@@ -139,7 +139,7 @@ public class CmdParse {
     startIndex += buffer.length;
 
     //VIN PF25 ， PM 40
-    buffer = new byte[25];
+    buffer = new byte[40];
     System.arraycopy(buff, startIndex, buffer, 0, buffer.length);
     String vin = new String(buffer).trim();
     bean.setVin(vin);
@@ -157,7 +157,7 @@ public class CmdParse {
     buffer = new byte[10];
     System.arraycopy(buff, startIndex, buffer, 0, buffer.length);
     str = new String(buffer);
-    bean.setId(str);
+    bean.setNodeId(str);
     startIndex += buffer.length;
 
     //螺栓号
@@ -173,7 +173,7 @@ public class CmdParse {
     startIndex += 1;
 
     //扭矩值
-    buffer = new byte[6];
+    buffer = new byte[7];
     System.arraycopy(buff, startIndex, buffer, 0, buffer.length);
     str = new String(buffer);
     value = Integer.parseInt(str);
@@ -185,7 +185,7 @@ public class CmdParse {
     bean.setTorqueState(torqueState - 0x30);
     startIndex += 1;
 
-    buffer = new byte[5];
+    buffer = new byte[7];
     System.arraycopy(buff, startIndex, buffer, 0, buffer.length);
     str = new String(buffer);
     value = Integer.parseInt(str);

@@ -1,15 +1,15 @@
-//buildscript {
-//  repositories {
-//    maven { url 'https://maven.fabric.io/public' }
-//  }
-//
-//  dependencies {
-//    classpath 'io.fabric.tools:gradle:1.+'
-//  }
-//}
+buildscript {
+  repositories {
+    maven { url 'https://maven.fabric.io/public' }
+  }
+
+  dependencies {
+    classpath 'io.fabric.tools:gradle:1.+'
+  }
+}
 
 apply plugin: 'com.android.application'
-//apply plugin: 'io.fabric'
+apply plugin: 'io.fabric'
 apply plugin: 'realm-android'
 
 repositories {
@@ -111,8 +111,8 @@ dependencies {
   implementation project(path: ':libwheel')
   implementation project(path: ':commonlib')
 
-//  compile('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
-//    transitive = true
-//  }
+  compile('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
+    transitive = true
+  }
 
 }

@@ -5,6 +5,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -15,7 +16,8 @@ import static android.content.Context.WIFI_SERVICE;
  */
 public class AppUtils {
 
-  private final static SimpleDateFormat mFormat = new SimpleDateFormat("MM-dd HH:mm:ss");
+  private final static SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+  private final static DecimalFormat mDoubleFormat = new DecimalFormat("#.00");
 
   /**
    *
@@ -49,7 +51,17 @@ public class AppUtils {
     return false;
   }
 
+  /**
+   * yy-MM-dd HH:mm:ss
+   * @param time
+   * @return
+   */
   public static String timeFormat(long time) {
     return mFormat.format(new Date(time));
+  }
+
+
+  public static String doubleFormat(double d) {
+    return mDoubleFormat.format(d);
   }
 }

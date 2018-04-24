@@ -36,15 +36,15 @@ public class WifiServerService extends Service {
   /**
    * 连接超时时间，单位毫秒
    */
-  private final static int SO_TIME = 8000;
+  private final static int SO_TIME = 6000;
   /**
    * TCP客户端读取数据超时时间，单位毫秒
    */
-  private final static int READ_TIME = 5000;
+  private final static int READ_TIME = 4000;
   /**
    * TCP客户端，读取数据连续4次无数据，断开客户端的连接，相当于9秒无数据，就T掉客户端
    */
-  private final static int READ_COUNT = 400;
+  private final static int READ_COUNT = 4;
 
   /**
    * 最大连接数

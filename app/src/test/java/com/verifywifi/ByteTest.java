@@ -13,15 +13,15 @@ public class ByteTest {
 
   @Test
   public void testByte() {
-    byte[] busrc = new byte[] { 0x01, 0x02, 0x03, 0x04 };
-
-    byte[] budet = new byte[3];
-
-    budet [2] = (byte) -2;
-
-    //System.arraycopy(busrc, 1, budet, 0, 2);
-    //System.out.println(MyHexUtils.buffer2String(busrc));
-    System.out.println(MyHexUtils.buffer2String(budet));
+    //byte[] busrc = new byte[] { 0x01, 0x02, 0x03, 0x04 };
+    //
+    //byte[] budet = new byte[3];
+    //
+    //budet [2] = (byte) -2;
+    //
+    ////System.arraycopy(busrc, 1, budet, 0, 2);
+    ////System.out.println(MyHexUtils.buffer2String(busrc));
+    //System.out.println(MyHexUtils.buffer2String(budet));
     //testSync(5);
     //rx.Observable.timer(1, TimeUnit.SECONDS).subscribe(new Action1<Long>() {
     //  @Override
@@ -46,6 +46,14 @@ public class ByteTest {
     //} catch (InterruptedException e) {
     //  e.printStackTrace();
     //}
+
+
+    byte b1 = 0x33;
+    byte b2 = 0x4c;
+    int  b = b1 ^ b2;
+    int  bb = 0x00 ^ 0xFF;
+    System.out.println("" +b + "  " + bb + " " + 0xFF);
+
   }
 
   private synchronized void testSync(int count) {

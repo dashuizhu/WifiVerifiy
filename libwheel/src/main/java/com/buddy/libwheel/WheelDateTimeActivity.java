@@ -99,8 +99,8 @@ public class WheelDateTimeActivity extends Activity implements View.OnClickListe
     if (mDay <= 0 || mDay > 31) {
       mDay = nowDay;
     }
-    MAX_YEAR = nowYear + 5;
-    MIN_YEAR = nowYear - 5;
+    MAX_YEAR = nowYear + 10;
+    MIN_YEAR = nowYear - 30;
     if (mYear > MAX_YEAR || mYear < MIN_YEAR) {
       mYear = nowYear;
     }

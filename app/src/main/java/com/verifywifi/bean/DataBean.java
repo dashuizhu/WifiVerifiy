@@ -1,5 +1,6 @@
 package com.verifywifi.bean;
 
+import com.verifywifi.utils.AppUtils;
 import lombok.Data;
 
 /**
@@ -9,13 +10,12 @@ import lombok.Data;
 public class DataBean {
 
   private long time;
-  private String cmd;
   private String vin;
   private String name;
   /**
-   * 数据id
+   * 数据节点id
    */
-  private String id;
+  private String nodeId;
   /**
    * 状态
    */
@@ -45,8 +45,8 @@ public class DataBean {
    */
   private int angleState;
 
-  public double getTorquValue() {
-    return  torque / 100.00d;
+  public String getTorquValue() {
+    double value = torque / 100.0d;
+    return AppUtils.doubleFormat(value);
   }
-
 }

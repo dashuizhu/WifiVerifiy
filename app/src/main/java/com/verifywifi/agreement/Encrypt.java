@@ -65,9 +65,9 @@ public class Encrypt {
 
         int cmdLength = MyByteUtils.byteToInt(data_command[headIndex + 1]);
         //+3 是因为 包头 、长度、 校验位、包尾、
-        if (index - headIndex == cmdLength + 3) {
+        if (index - headIndex + 1 == cmdLength) {
           //+3 +1
-          processData(data_command, headIndex, cmdLength + 4);
+          processData(data_command, headIndex, cmdLength);
 
           synchronized (this) {
             //把剩余没解析完的数据，加入缓存池，清空原来数据
@@ -105,7 +105,12 @@ public class Encrypt {
     byte[] bbb = new byte[length - 4];
     System.arraycopy(buffer, start + 3, bbb, 0, bbb.length);
 
-    int b = bbb[1] ^ bbb[2];
+    int b;
+    if (bbb.length > 2) {
+      b = bbb[1] ^ bbb[2];
+    } else {
+      b = 0xFF;
+    }
     if (check != b) {
       Log.w(TAG, "校验值错误");
       return;
@@ -123,12 +128,12 @@ public class Encrypt {
   public static byte[] packageCmd(byte[] cmd) {
     byte[] buff = new byte[cmd.length + 4];
     buff[0] = CMD_HEAD;
-    buff[1] = (byte) MyByteUtils.byteToInt(cmd.length);
+    buff[1] = (byte) MyByteUtils.byteToInt(buff.length);
     //buff[2]
     if (cmd.length > 2) {
       buff[2] = (byte) (cmd[1] ^ cmd[2]);
     } else {
-      buff[2] = cmd[0];
+      buff[2] = (byte) 0xFF;
     }
     System.arraycopy(cmd, 0, buff, 3, cmd.length);
     buff[buff.length - 1] = CMD_END;
