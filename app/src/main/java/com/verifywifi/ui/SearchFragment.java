@@ -10,7 +10,9 @@ import android.support.v7.widget.SimpleItemAnimator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.Spinner;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -44,13 +46,13 @@ public class SearchFragment extends BaseFragment {
   private static final int ACTIVITY_END_TIME = 11;
   private static final int ACTIVITY_START_TIME = 12;
 
-  @BindView(R.id.btn_time_start) Button mBtnTimeStart;
-  @BindView(R.id.btn_time_end) Button mBtnTimeEnd;
   @BindView(R.id.recyclerView) FastScrollRecyclerView mRecyclerView;
   @BindView(R.id.refreshLayout) SmartRefreshLayout mRefreshLayout;
   @BindView(R.id.btn_date_start) Button mBtnDateStart;
   @BindView(R.id.btn_date_end) Button mBtnDateEnd;
   @BindView(R.id.btn_query) Button mBtnQuery;
+  @BindView(R.id.spinner_angle) Spinner mSpinnerAngle;
+  @BindView(R.id.spinner_torque) Spinner mSpinnerTorque;
 
   private Unbinder mUnbinder;
   private DataAdapter mAdapter;
@@ -98,7 +100,7 @@ public class SearchFragment extends BaseFragment {
     mRecyclerView.setItemAnimator(new DefaultItemAnimator());
     LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
     mRecyclerView.setLayoutManager(mLayoutManager);
-    mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), VERTICAL));
+    //mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), VERTICAL));
     ((SimpleItemAnimator) mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
 
     mAdapter = new DataAdapter(new ArrayList<DataBean>());
@@ -109,6 +111,32 @@ public class SearchFragment extends BaseFragment {
     Date date = new Date();
     mBtnDateStart.setText(DateUtils.getDateString(date));
     mBtnDateEnd.setText(DateUtils.getDateString(date));
+
+
+
+    mSpinnerAngle.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+      @Override
+      public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        mAdapter.setAngleFilter(position);
+      }
+
+      @Override
+      public void onNothingSelected(AdapterView<?> parent) {
+
+      }
+    });
+    mSpinnerTorque.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+      @Override
+      public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        mAdapter.setTorqueFilter(position);
+      }
+
+      @Override
+      public void onNothingSelected(AdapterView<?> parent) {
+
+      }
+    });
+
   }
 
   @OnClick({ R.id.btn_date_start, R.id.btn_date_end })
@@ -208,4 +236,5 @@ public class SearchFragment extends BaseFragment {
             String.format("%04d-%02d-%02d %02d:%02d:%02d", year, month, day, hour, minute, second);
     return str;
   }
+
 }

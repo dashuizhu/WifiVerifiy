@@ -9,6 +9,12 @@ import lombok.Data;
 @Data
 public class DataBean {
 
+
+  public final static int STATE_LOW = 0;
+  public final static int STATE_NORMAL = 1;
+  public final static int STATE_HIGH = 2;
+
+
   private long time;
   private String vin;
   private String name;

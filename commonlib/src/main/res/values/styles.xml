@@ -13,12 +13,12 @@
 
     <style name="text_big">
         <item name="android:textColor">@color/text_normal</item>
-        <item name="android:textSize">17sp</item>
+        <item name="android:textSize">15sp</item>
     </style>
 
     <style name="text_normal" >
         <item name="android:textColor">@color/text_light_gray</item>
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">13sp</item>
     </style>
 
     <style name="activity_dialog" parent="@android:style/Theme.Dialog">

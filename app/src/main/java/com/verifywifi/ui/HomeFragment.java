@@ -63,7 +63,7 @@ public class HomeFragment extends BaseFragment implements AdapterView.OnItemClic
   /**
    * 缓冲刷新数据个数，  累计到一定数量，才刷新ui
    */
-  private final int CACHE_SIZE = 30;
+  private final int CACHE_SIZE = 10;
 
   /**
    * 单位秒，若数据暂停了，而在缓存队列中， 最后一个数据的时间，再延迟一定时间，直接显示
@@ -73,7 +73,7 @@ public class HomeFragment extends BaseFragment implements AdapterView.OnItemClic
   /**
    * 最大显示个数
    */
-  private final int LIST_MAX = 5000;
+  private final int LIST_MAX = 6000;
   /**
    * 达到最大显示个数时，  删除尾巴个数
    */
@@ -186,7 +186,7 @@ public class HomeFragment extends BaseFragment implements AdapterView.OnItemClic
     mRecyclerView.setItemAnimator(new DefaultItemAnimator());
     mLayoutManager = new LinearLayoutManager(getContext());
     mRecyclerView.setLayoutManager(mLayoutManager);
-    mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), VERTICAL));
+    //mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), VERTICAL));
     ((SimpleItemAnimator) mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
     mAdapter = new DataAdapter(new ArrayList<DataBean>());
     mAdapter.setOnItemClickListener(this);

@@ -1,5 +1,6 @@
 package com.verifywifi.ui;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
@@ -16,6 +17,7 @@ import com.verifywifi.utils.MyLog;
 
 /**
  * 主页
+ *
  * @author zhuj 2018/4/11 上午10:16
  */
 public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener {
@@ -45,8 +47,6 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
 
     mTabLayout.addOnTabSelectedListener(this);
     initViews();
-
-    getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
   }
 
   private void initViews() {
@@ -55,16 +55,22 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
 
   @Override
   protected void onDestroy() {
-    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     super.onDestroy();
   }
 
   @Override
+  protected void onStop() {
+    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    super.onStop();
+  }
+
+  @Override
   protected void onStart() {
+    super.onStart();
+    getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     if (!AppUtils.isWifi(this)) {
       Toast.makeText(this, "请先连接wifi", Toast.LENGTH_LONG).show();
     }
-    super.onStart();
   }
 
   @Override
@@ -118,5 +124,10 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     if (mSearchFragment != null && !mSearchFragment.isHidden()) {
       fragmentTransaction.hide(mSearchFragment);
     }
+  }
+
+  @Override
+  public void onConfigurationChanged(Configuration newConfig) {
+    super.onConfigurationChanged(newConfig);
   }
 }
