@@ -1,5 +1,6 @@
 package com.verifywifi.ui;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -11,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import com.verifywifi.R;
 import com.verifywifi.utils.AppUtils;
 import com.verifywifi.utils.MyLog;
@@ -129,5 +131,11 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
   @Override
   public void onConfigurationChanged(Configuration newConfig) {
     super.onConfigurationChanged(newConfig);
+  }
+
+  @OnClick(R.id.btn_add)
+  public void onViewClicked() {
+    Intent intent = new Intent(this, InputActivity.class);
+    startActivity(intent);
   }
 }

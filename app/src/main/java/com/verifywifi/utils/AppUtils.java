@@ -17,7 +17,7 @@ import static android.content.Context.WIFI_SERVICE;
 public class AppUtils {
 
   private final static SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-  private final static DecimalFormat mDoubleFormat = new DecimalFormat("#.00");
+  private final static DecimalFormat mDoubleFormat = new DecimalFormat("#0.00");
 
   /**
    *

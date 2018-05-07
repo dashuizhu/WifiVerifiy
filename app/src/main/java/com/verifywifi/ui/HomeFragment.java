@@ -1,13 +1,10 @@
 package com.verifywifi.ui;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +15,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import com.hwangjr.rxbus.RxBus;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.hwangjr.rxbus.annotation.Tag;
 import com.hwangjr.rxbus.thread.EventThread;
@@ -29,12 +25,9 @@ import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 import com.verifywifi.AppConstants;
 import com.verifywifi.MyApplication;
 import com.verifywifi.R;
-import com.verifywifi.adapter.BaseRecyclerAdapter;
 import com.verifywifi.adapter.DataAdapter;
-import com.verifywifi.adapter.SmartViewHolder;
 import com.verifywifi.bean.DataBean;
 import com.verifywifi.database.DataDao;
-import com.verifywifi.utils.AppUtils;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.FlowableEmitter;
@@ -48,8 +41,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
-
-import static android.support.v7.widget.DividerItemDecoration.VERTICAL;
 
 /**
  * 首页数据

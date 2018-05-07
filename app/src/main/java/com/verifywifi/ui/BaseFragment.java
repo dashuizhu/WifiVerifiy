@@ -2,16 +2,14 @@ package com.verifywifi.ui;
 
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
-import android.widget.Toast;
 import com.hwangjr.rxbus.RxBus;
+import com.verifywifi.utils.ToastUtils;
 import com.verifywifi.view.MyProgressDialog;
 
 /**
  * @author zhuj 2018/4/9 上午10:52.
  */
 public class BaseFragment extends Fragment implements IBaseView {
-
-  private Toast mToast;
 
   private MyProgressDialog mProgressDialog;
 
@@ -89,15 +87,10 @@ public class BaseFragment extends Fragment implements IBaseView {
   }
 
   public void showToast(String str) {
-    if (mToast == null) {
-      mToast = Toast.makeText(getContext(), str, Toast.LENGTH_LONG);
-    }
-    mToast.setText(str);
-    mToast.setDuration(Toast.LENGTH_LONG);
-    mToast.show();
+    ToastUtils.showToast(str);
   }
 
   public void showToast(@StringRes int resId) {
-    showToast(getString(resId));
+    ToastUtils.showToast(resId);
   }
 }

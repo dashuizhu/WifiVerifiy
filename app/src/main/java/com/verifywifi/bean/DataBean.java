@@ -48,6 +48,7 @@ public class DataBean {
 
   /**
    * 角度状态
+   * 0偏低， 1正常， 2偏高
    */
   private int angleState;
 
