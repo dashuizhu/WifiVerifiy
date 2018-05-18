@@ -20,6 +20,7 @@ import com.verifywifi.AppConstants;
 import com.verifywifi.R;
 import com.verifywifi.bean.DataBean;
 import com.verifywifi.utils.DateUtils;
+import com.verifywifi.utils.SharedPreferencesUser;
 import com.verifywifi.utils.ToastUtils;
 import java.util.Date;
 
@@ -47,7 +48,6 @@ public class InputActivity extends Activity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_input);
     ButterKnife.bind(this);
-    setTitle("添加数据");
 
     initViews();
   }
@@ -56,9 +56,20 @@ public class InputActivity extends Activity {
     Date date = new Date();
     mBtnTime.setText(DateUtils.getDateString(date));
 
+    String name = (String) SharedPreferencesUser.get(this, SharedPreferencesUser.KEY_NAME, "");
+    String vin = (String) SharedPreferencesUser.get(this, SharedPreferencesUser.KEY_VIN, "");
+    String nodeId = (String) SharedPreferencesUser.get(this, SharedPreferencesUser.KEY_NODE_ID, "");
+    String bolt = (String) SharedPreferencesUser.get(this, SharedPreferencesUser.KEY_BOLT, "");
+
+    mEtName.setText(name);
+    mEtVin.setText(vin);
+    mEtNodeId.setText(nodeId);
+    mEtBolt.setText(bolt);
+
+    // DataBean的三种状态，   1表示正常
     mSpinnerAngle.setSelection(1);
     mSpinnerTorque.setSelection(1);
-
+    //选中颜色状态修改
     mSpinnerTorque.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
       @Override
       public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -180,6 +191,11 @@ public class InputActivity extends Activity {
     bean.setAngleState(angleState);
 
     bean.setState(torqueState == DataBean.STATE_NORMAL && angleState == DataBean.STATE_NORMAL);
+
+    SharedPreferencesUser.put(this, SharedPreferencesUser.KEY_NAME, name);
+    SharedPreferencesUser.put(this, SharedPreferencesUser.KEY_NODE_ID, nodeId);
+    SharedPreferencesUser.put(this, SharedPreferencesUser.KEY_VIN, vin);
+    SharedPreferencesUser.put(this, SharedPreferencesUser.KEY_BOLT, bolt);
 
     RxBus.get().post(AppConstants.RXBUS_PUSH, bean);
     finish();

@@ -14,6 +14,10 @@ public class SharedPreferencesUser {
    * 保存在手机里面的文件名
    */
   public static final String FILE_NAME = "verifySystem_share_data";
+  public static final String KEY_NAME = "key_name";
+  public static final String KEY_VIN = "key_vin";
+  public static final String KEY_NODE_ID = "key_node_id";
+  public static final String KEY_BOLT = "key_bolt";
 
   /**
    * 保存数据的方法，我们需要拿到保存数据的具体类型，然后根据类型调用不同的保存方法

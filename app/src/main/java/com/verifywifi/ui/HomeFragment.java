@@ -113,6 +113,7 @@ public class HomeFragment extends BaseFragment implements AdapterView.OnItemClic
     initViews();
 
     createAddObservable();
+    cleanOldData();
     return view;
   }
 
@@ -387,5 +388,35 @@ public class HomeFragment extends BaseFragment implements AdapterView.OnItemClic
       mDelayAdd = null;
     }
     mEmitter = null;
+  }
+
+  private long lasttime;
+
+  @Override
+  public void onStart() {
+    super.onStart();
+
+  }
+
+  @Override
+  public void onHiddenChanged(boolean hidden) {
+    super.onHiddenChanged(hidden);
+    if (hidden) {
+      cleanOldData();
+    }
+  }
+
+  private void cleanOldData() {
+    long delayTime = System.currentTimeMillis() - lasttime;
+    //避免重复粗发
+    if (delayTime < 24L * 3600 * 1000) {
+      return;
+    }
+    lasttime = System.currentTimeMillis();
+
+    //清除当前时间半个月以前的数据
+    long monthMill = 15L * 24 * 3600 * 1000;
+    long cleanTime = System.currentTimeMillis() - monthMill;
+    DataDao.cleanOld(cleanTime);
   }
 }

@@ -1,6 +1,8 @@
 package com.verifywifi.database;
 
+import android.util.Log;
 import com.verifywifi.bean.DataBean;
+import com.verifywifi.utils.DateUtils;
 import com.verifywifi.utils.MyLog;
 import io.realm.Realm;
 import io.realm.RealmObject;
@@ -8,6 +10,7 @@ import io.realm.RealmResults;
 import io.realm.Sort;
 import io.realm.annotations.PrimaryKey;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -115,6 +118,7 @@ public class DataDao extends RealmObject {
    * 删除指定时间之前 的数据
    */
   public static void cleanOld(long time) {
+    Log.w(TAG, " 清除数据 时间 " + DateUtils.sSDF.format(new Date(time)));
     Realm realm = Realm.getDefaultInstance();
     RealmResults<DataDao> results;
     realm.beginTransaction();
