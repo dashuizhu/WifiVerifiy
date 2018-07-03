@@ -113,7 +113,6 @@ public class HomeFragment extends BaseFragment implements AdapterView.OnItemClic
     initViews();
 
     createAddObservable();
-    cleanOldData();
     return view;
   }
 
@@ -395,7 +394,7 @@ public class HomeFragment extends BaseFragment implements AdapterView.OnItemClic
   @Override
   public void onStart() {
     super.onStart();
-
+    cleanOldData();
   }
 
   @Override
